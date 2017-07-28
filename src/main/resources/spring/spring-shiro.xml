@@ -6,6 +6,8 @@
 	   http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
 
     <bean id="shiroRealm" class="com.shiro.test.util.ShiroRealm"></bean>
+    <bean id="shiroExceptionFilter" class="com.shiro.test.filter.ShiroAuthFilter"/>
+
 
 
     <!-- Shiro安全管理器 -->
@@ -18,14 +20,15 @@
         <!-- Shiro的核心安全接口，这个属性是必须的 -->
         <property name="securityManager" ref="securityManager"/>
 
-        <property name="loginUrl" value="/index.jsp" />
-        <property name="successUrl" value="/loginSuccess.jsp" />
-        <property name="unauthorizedUrl" value="" />
+        <property name="filters">
+            <map>
+                <entry key="shiroExceptionFilter" value-ref="shiroExceptionFilter" />
+            </map>
+        </property>
 
         <property name="filterChainDefinitions">
             <value>
-                /user/login = anon
-                /test/**    = authc,roles[user]
+                /test/**    = shiroExceptionFilter[user]
             </value>
         </property>
 
