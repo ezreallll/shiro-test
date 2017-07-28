@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+	   http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+    <bean id="shiroRealm" class="com.shiro.test.util.ShiroRealm"></bean>
+
+
+    <!-- Shiro安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="shiroRealm"></property>
+    </bean>
+
+    <!-- 对应于web.xml中配置的那个shiroFilter -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- Shiro的核心安全接口，这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager"/>
+
+        <property name="loginUrl" value="/index.jsp" />
+        <property name="successUrl" value="/loginSuccess.jsp" />
+        <property name="unauthorizedUrl" value="" />
+
+        <property name="filterChainDefinitions">
+            <value>
+                /user/login = anon
+                /test/**    = authc,roles[user]
+            </value>
+        </property>
+
+    </bean>
+
+
+
+
+
+
+
+    <!-- Shiro的注解配置一定要放在spring-mvc中 -->
+
+</beans>
